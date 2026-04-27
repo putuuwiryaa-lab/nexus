@@ -1,0 +1,11 @@
+{
+  "name": "nexus-2d-vercel",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve public",
+    "build": "node scripts/build.js",
+    "start": "npx serve dist"
+  },
+  "devDependencies": {}
+}
