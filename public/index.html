@@ -3,220 +3,380 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#0f172a" />
+  <meta name="theme-color" content="#0b1120" />
   <title>Nexus 2D</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    html, body { min-height: 100%; background: #0f172a; overflow-x: hidden; }
     :root {
-      --bg-color: #0f172a;
-      --glass-bg: rgba(22, 30, 49, 0.85);
-      --primary: #00f2fe;
-      --secondary: #4facfe;
-      --accent: #f43f5e;
-      --text-main: #f8fafc;
+      --bg: #0b1120;
+      --panel: #111827;
+      --panel-soft: #162033;
+      --line: rgba(148, 163, 184, 0.18);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --primary: #38bdf8;
+      --primary-2: #60a5fa;
+      --accent: #fb7185;
+      --success: #22c55e;
+      --radius: 22px;
     }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background: radial-gradient(circle at top, #1e1b4b 0%, #0f172a 100%);
-      color: var(--text-main);
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 8vh 0 32px;
+      min-height: 100vh;
+      min-height: 100dvh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% -20%, rgba(56,189,248,0.22), transparent 42%),
+        linear-gradient(180deg, #0b1120 0%, #111827 100%);
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      overflow-x: hidden;
       user-select: none;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
-    .app-container { width: 100%; max-width: 390px; padding: 0 20px; }
+
+    .app-container {
+      width: min(100%, 410px);
+    }
+
     .card {
       width: 100%;
-      background: var(--glass-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 24px;
-      padding: 36px 24px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+      background: rgba(17, 24, 39, 0.92);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 26px 20px 22px;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
       text-align: center;
+      transform: translateZ(0);
     }
-    h1 {
-      margin-bottom: 25px;
-      font-size: 24px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-transform: uppercase;
-      letter-spacing: 3px;
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 16px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      color: #86efac;
+      font-size: 11px;
       font-weight: 800;
+      letter-spacing: .7px;
+      text-transform: uppercase;
     }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--success);
+    }
+
+    h1 {
+      margin-bottom: 8px;
+      font-size: clamp(25px, 7vw, 34px);
+      line-height: 1.05;
+      font-weight: 900;
+      letter-spacing: -0.8px;
+    }
+
+    .subtitle {
+      margin-bottom: 22px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .input-wrap {
+      position: relative;
+      margin-bottom: 14px;
+    }
+
     input {
       width: 100%;
-      padding: 18px 15px;
-      margin-bottom: 20px;
-      background: rgba(0,0,0,0.25);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
+      height: 62px;
+      padding: 0 18px;
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      border-radius: 18px;
       color: #fff;
-      font-size: 20px;
+      font-size: 24px;
       text-align: center;
-      letter-spacing: 8px;
-      font-weight: 600;
-      transition: all 0.3s;
+      letter-spacing: 9px;
+      font-weight: 850;
+      outline: none;
+      transition: border-color .18s ease, background-color .18s ease, box-shadow .18s ease;
     }
-    input::placeholder { color: #475569; letter-spacing: 4px; font-weight: normal; font-size: 16px; }
-    input:focus { outline: none; border-color: var(--primary); background: rgba(0,0,0,0.5); box-shadow: 0 0 15px rgba(0,242,254,0.1); }
+
+    input::placeholder {
+      color: #64748b;
+      letter-spacing: 3px;
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    input:focus {
+      border-color: rgba(56,189,248,0.75);
+      background: #17233a;
+      box-shadow: 0 0 0 4px rgba(56,189,248,0.08);
+    }
+
     button {
       width: 100%;
-      padding: 18px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: #0f172a;
-      border: none;
-      border-radius: 16px;
-      font-size: 15px;
-      font-weight: 800;
+      height: 58px;
+      border: 0;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #07111f;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
       cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      box-shadow: 0 8px 20px rgba(0,242,254,0.25);
-      transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-      position: relative;
+      transition: transform .15s ease, filter .15s ease, opacity .15s ease;
+      will-change: transform;
     }
-    button:active { transform: scale(0.96); box-shadow: 0 4px 10px rgba(0,242,254,0.2); }
-    button.loading { background: #334155; color: #94a3b8; box-shadow: none; pointer-events: none; letter-spacing: 4px; }
-    .status-badge {
-      font-size: 10px;
-      background: rgba(0,242,254,0.1);
-      border: 1px solid rgba(0,242,254,0.2);
-      padding: 6px 14px;
-      border-radius: 20px;
-      display: inline-block;
-      margin-bottom: 25px;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 700;
+
+    button:active {
+      transform: scale(.985);
     }
-    .result-box { margin-top: 25px; text-align: left; display: none; animation: slideUp 0.5s ease; }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-    .result-item { background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.05); border-left: 4px solid var(--primary); padding: 16px 20px; border-radius: 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-    .result-item:nth-child(2) { border-left-color: var(--secondary); }
-    .result-item:nth-child(3) { border-left-color: var(--accent); }
-    .res-label { font-size: 12px; color: #94a3b8; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
-    .res-value { font-size: 22px; font-weight: 800; letter-spacing: 5px; color: #fff; }
-    .hint { margin-top: 18px; font-size: 11px; line-height: 1.5; color: #64748b; letter-spacing: 0.5px; }
+
+    button.loading {
+      background: #263244;
+      color: #9ca3af;
+      pointer-events: none;
+      opacity: .85;
+    }
+
+    .result-box {
+      display: grid;
+      grid-template-rows: 0fr;
+      margin-top: 18px;
+      opacity: 0;
+      transition: grid-template-rows .24s ease, opacity .2s ease;
+    }
+
+    .result-box.show {
+      grid-template-rows: 1fr;
+      opacity: 1;
+    }
+
+    .result-inner {
+      overflow: hidden;
+      display: grid;
+      gap: 10px;
+    }
+
+    .result-item {
+      min-height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 15px;
+      background: rgba(15, 23, 42, .8);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+
+    .result-item:nth-child(1) { --item: var(--primary); }
+    .result-item:nth-child(2) { --item: var(--primary-2); }
+    .result-item:nth-child(3) { --item: var(--accent); }
+
+    .res-label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+    }
+
+    .res-value {
+      color: var(--item);
+      font-size: clamp(21px, 6vw, 27px);
+      font-weight: 950;
+      letter-spacing: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .hint {
+      margin-top: 17px;
+      color: #64748b;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 360px) {
+      body { padding: 12px; }
+      .card { padding: 22px 15px 18px; }
+      input { letter-spacing: 7px; }
+      .res-value { letter-spacing: 3px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 </head>
 <body>
   <main class="app-container">
     <section class="card">
-      <div class="status-badge">Akses Aktif Tanpa PIN</div>
+      <div class="status-badge"><span class="status-dot"></span>Akses Aktif</div>
       <h1>Engine Poltar</h1>
-      <input type="number" id="res" placeholder="RESULT 4D" inputmode="numeric" oninput="if(this.value.length>4)this.value=this.value.slice(0,4);" />
+      <p class="subtitle">Masukkan 4 digit result untuk ekstraksi cepat dan ringan.</p>
+
+      <div class="input-wrap">
+        <input type="number" id="res" placeholder="RESULT 4D" inputmode="numeric" autocomplete="off" oninput="limitInput(this)" />
+      </div>
+
       <button id="btnCalc" onclick="processExtraction()">Ekstrak Data</button>
-      <div class="result-box" id="result-box">
-        <div class="result-item">
-          <span class="res-label">4D (AI)</span>
-          <span class="res-value" id="out-4" style="color:var(--primary);">0000</span>
-        </div>
-        <div class="result-item">
-          <span class="res-label">6D (CT)</span>
-          <span class="res-value" id="out-6" style="color:var(--secondary);">000000</span>
-        </div>
-        <div class="result-item">
-          <span class="res-label">8D (BBFS)</span>
-          <span class="res-value" id="out-8" style="color:var(--accent);">00000000</span>
+
+      <div class="result-box" id="result-box" aria-live="polite">
+        <div class="result-inner">
+          <div class="result-item">
+            <span class="res-label">4D AI</span>
+            <span class="res-value" id="out-4">0000</span>
+          </div>
+          <div class="result-item">
+            <span class="res-label">6D CT</span>
+            <span class="res-value" id="out-6">000000</span>
+          </div>
+          <div class="result-item">
+            <span class="res-label">8D BBFS</span>
+            <span class="res-value" id="out-8">00000000</span>
+          </div>
         </div>
       </div>
-      <p class="hint">Masukkan 4 digit result, lalu tekan tombol ekstrak.</p>
+
+      <p class="hint">UI dibuat lebih smooth, minim efek berat, dan tetap nyaman di HP.</p>
     </section>
   </main>
 
   <script>
-    var mod10 = function(n) { return ((n % 10) + 10) % 10; };
-    var singleDigit = function(n) {
-      while (n > 9) n = String(n).split('').reduce(function(a, b) { return parseInt(a, 10) + parseInt(b, 10); }, 0);
+    const mod10 = n => ((n % 10) + 10) % 10;
+    const singleDigit = n => {
+      while (n > 9) n = String(n).split('').reduce((a, b) => Number(a) + Number(b), 0);
       return n;
     };
-    var ML = {0:1,1:0,2:5,3:8,4:7,5:2,6:9,7:4,8:3,9:6};
-    var MB = {0:8,1:7,2:6,3:9,4:5,5:4,6:2,7:1,8:0,9:3};
+
+    const ML = {0:1,1:0,2:5,3:8,4:7,5:2,6:9,7:4,8:3,9:6};
+    const MB = {0:8,1:7,2:6,3:9,4:5,5:4,6:2,7:1,8:0,9:3};
+
+    function limitInput(el) {
+      el.value = el.value.replace(/\D/g, '').slice(0, 4);
+    }
 
     function processExtraction() {
-      var val = document.getElementById('res').value;
+      const val = document.getElementById('res').value;
       if (val.length !== 4) {
         alert('Masukkan tepat 4 digit result!');
         return;
       }
-      var btn = document.getElementById('btnCalc');
-      document.getElementById('result-box').style.display = 'none';
+
+      const btn = document.getElementById('btnCalc');
+      const box = document.getElementById('result-box');
+      box.classList.remove('show');
       btn.classList.add('loading');
-      btn.innerText = 'ANALYZING...';
-      setTimeout(function() {
+      btn.textContent = 'Memproses...';
+
+      window.setTimeout(() => {
         calculateAI();
         btn.classList.remove('loading');
-        btn.innerText = 'EKSTRAK DATA';
-      }, 700);
+        btn.textContent = 'Ekstrak Data';
+        box.classList.add('show');
+      }, 220);
     }
 
     function calculateAI() {
-      var val = document.getElementById('res').value;
-      var arr = val.split('').map(Number);
-      var as = arr[0], kop = arr[1], kep = arr[2], ek = arr[3];
-      var tgl = new Date().getDate();
-      var votes = Array(10).fill(0);
-      var addVote = function(a) { a.forEach(function(num) { votes[num]++; }); };
+      const val = document.getElementById('res').value;
+      const arr = val.split('').map(Number);
+      const as = arr[0], kop = arr[1], kep = arr[2], ek = arr[3];
+      const tgl = new Date().getDate();
+      const votes = Array(10).fill(0);
+      const addVote = nums => nums.forEach(num => votes[num]++);
 
       addVote([singleDigit(as+kop), mod10(singleDigit(as+kop)+1), mod10(singleDigit(as+kop)+2), mod10(singleDigit(as+kop)+3)]);
       addVote([Math.abs(kep-ek), mod10(Math.abs(kep-ek)-1), mod10(Math.abs(kep-ek)-2), mod10(Math.abs(kep-ek)-3)]);
       addVote([ek, mod10(ek+1), mod10(ek+5), mod10(mod10(ek+5)+1)]);
 
-      var luar = singleDigit(as+ek), dalam = singleDigit(kop+kep);
-      var set4 = Array.from(new Set([luar, dalam, mod10(luar+dalam), Math.abs(luar-dalam)]));
+      const luar = singleDigit(as+ek), dalam = singleDigit(kop+kep);
+      const set4 = Array.from(new Set([luar, dalam, mod10(luar+dalam), Math.abs(luar-dalam)]));
       while (set4.length < 4) {
-        var nx = mod10(set4[set4.length-1]+1);
+        const nx = mod10(set4[set4.length - 1] + 1);
         if (!set4.includes(nx)) set4.push(nx);
       }
-      addVote(set4.slice(0,4));
+      addVote(set4.slice(0, 4));
 
-      var f5 = singleDigit(as+kop+kep+ek);
+      const f5 = singleDigit(as+kop+kep+ek);
       addVote([f5, mod10(f5+2), mod10(f5+4), mod10(f5+6)]);
-      var f6 = mod10(as*ek);
+
+      const f6 = mod10(as*ek);
       addVote([f6, mod10(f6+1), mod10(f6+2), mod10(f6+3)]);
 
-      var qmSet = Array.from(new Set([kep, mod10(kep+5), ML[kep], MB[kep]]));
+      const qmSet = Array.from(new Set([kep, mod10(kep+5), ML[kep], MB[kep]]));
       while (qmSet.length < 4) {
-        var nx2 = mod10(qmSet[qmSet.length-1]+1);
+        const nx2 = mod10(qmSet[qmSet.length - 1] + 1);
         if (!qmSet.includes(nx2)) qmSet.push(nx2);
       }
-      addVote(qmSet.slice(0,4));
+      addVote(qmSet.slice(0, 4));
 
-      var pArr = [], p = ek;
-      for (var i = 0; i < 4; i++) { p = mod10(p+2); pArr.push(p); }
+      const pArr = [];
+      let p = ek;
+      for (let i = 0; i < 4; i++) {
+        p = mod10(p + 2);
+        pArr.push(p);
+      }
       addVote(pArr);
       addVote([mod10(kep+2), mod10(ek+5), mod10(kep*ek), mod10(kep+ek+3)]);
-      var f10 = singleDigit(kep+ek+tgl);
+
+      const f10 = singleDigit(kep+ek+tgl);
       addVote([f10, mod10(f10-1), mod10(f10-2), mod10(f10-3)]);
 
-      var isGenapKep = kep%2===0, isGenapEk = ek%2===0;
-      var isKecilKep = kep<5, isKecilEk = ek<5;
-      var needGanjil = (isGenapKep && isGenapEk) ? true : ((!isGenapKep && !isGenapEk) ? false : null);
-      var needBesar = (isKecilKep && isKecilEk) ? true : ((!isKecilKep && !isKecilEk) ? false : null);
+      const isGenapKep = kep % 2 === 0;
+      const isGenapEk = ek % 2 === 0;
+      const isKecilKep = kep < 5;
+      const isKecilEk = ek < 5;
+      const needGanjil = (isGenapKep && isGenapEk) ? true : ((!isGenapKep && !isGenapEk) ? false : null);
+      const needBesar = (isKecilKep && isKecilEk) ? true : ((!isKecilKep && !isKecilEk) ? false : null);
 
-      var hasilObj = [];
-      for (var j = 0; j < 10; j++) {
-        var isGanjil = j%2!==0, isBesar = j>=5, bonus = 0;
-        if (needGanjil===true && isGanjil) bonus+=0.5;
-        if (needGanjil===false && !isGanjil) bonus+=0.5;
-        if (needBesar===true && isBesar) bonus+=0.5;
-        if (needBesar===false && !isBesar) bonus+=0.5;
+      const hasilObj = [];
+      for (let j = 0; j < 10; j++) {
+        const isGanjil = j % 2 !== 0;
+        const isBesar = j >= 5;
+        let bonus = 0;
+        if (needGanjil === true && isGanjil) bonus += .5;
+        if (needGanjil === false && !isGanjil) bonus += .5;
+        if (needBesar === true && isBesar) bonus += .5;
+        if (needBesar === false && !isBesar) bonus += .5;
         hasilObj.push({ digit: j, totalScore: votes[j] + bonus });
       }
 
-      hasilObj.sort(function(a, b) { return b.totalScore - a.totalScore || b.digit - a.digit; });
-      var finalDigits = hasilObj.map(function(x) { return x.digit; });
+      hasilObj.sort((a, b) => b.totalScore - a.totalScore || b.digit - a.digit);
+      const finalDigits = hasilObj.map(x => x.digit);
+      const asc = nums => nums.sort((a,b) => a-b).join('');
 
-      document.getElementById('out-4').innerText = finalDigits.slice(0,4).sort(function(a,b){return a-b;}).join('');
-      document.getElementById('out-6').innerText = finalDigits.slice(0,6).sort(function(a,b){return a-b;}).join('');
-      document.getElementById('out-8').innerText = finalDigits.slice(0,8).sort(function(a,b){return a-b;}).join('');
-      document.getElementById('result-box').style.display = 'block';
+      document.getElementById('out-4').textContent = asc(finalDigits.slice(0, 4));
+      document.getElementById('out-6').textContent = asc(finalDigits.slice(0, 6));
+      document.getElementById('out-8').textContent = asc(finalDigits.slice(0, 8));
     }
   </script>
 </body>
